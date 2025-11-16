@@ -97,3 +97,10 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# Custom ignores
+Assets/Firebase/Plugins/x86_64/
+# Ignore Firebase native libraries
+ITD_Asg1_Succulent/Assets/Firebase/Plugins/x86_64/
+ITD_Asg1_Succulent/Assets/Firebase/Plugins/x86_64.meta
+
