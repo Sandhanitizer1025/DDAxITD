@@ -1,11 +1,13 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-
 public class ImageTracker : MonoBehaviour
 {
+    public GameObject CurrentActiveObject;
+
     [SerializeField]
     private ARTrackedImageManager trackedImageManager;
 
@@ -14,60 +16,93 @@ public class ImageTracker : MonoBehaviour
 
     private Dictionary<string, GameObject> spawnedPrefabs = new Dictionary<string, GameObject>();
 
-    private void Start()
+    public event Action<GameObject> OnPlantActivated;
+    public event Action<GameObject> OnPlantDeactivated;
+
+    void OnEnable()
     {
         if (trackedImageManager != null)
-        {
-            trackedImageManager.trackablesChanged.AddListener(OnImageChanged);
-            SetupPrefabs();
-        }
+            trackedImageManager.trackablesChanged.AddListener(OnImageChanged);   // NEW API
+    }
+
+    void OnDisable()
+    {
+        if (trackedImageManager != null)
+            trackedImageManager.trackablesChanged.RemoveListener(OnImageChanged);
+    }
+
+    void Start()
+    {
+        SetupPrefabs();
     }
 
     void SetupPrefabs()
     {
+        spawnedPrefabs.Clear();
+
         foreach (GameObject prefab in placeablePrefabs)
         {
-            GameObject newPrefab = Instantiate(prefab, Vector3.zero, Quaternion.identity);
-            newPrefab.name = prefab.name;
-            newPrefab.SetActive(false);
-            spawnedPrefabs.Add(prefab.name, newPrefab);
+            GameObject newObj = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+            newObj.name = prefab.name;
+            newObj.SetActive(false);
+            spawnedPrefabs.Add(prefab.name, newObj);
         }
     }
 
-    void OnImageChanged(ARTrackablesChangedEventArgs<ARTrackedImage> eventArgs)
+    void OnImageChanged(ARTrackablesChangedEventArgs<ARTrackedImage> args)
     {
-        foreach (ARTrackedImage trackedImage in eventArgs.added)
-        {
-            UpdateImage(trackedImage);
-        }
+        foreach (var added in args.added)
+            UpdateImage(added);
 
-        foreach (ARTrackedImage trackedImage in eventArgs.updated)
-        {
-            UpdateImage(trackedImage);
-        }
+        foreach (var updated in args.updated)
+            UpdateImage(updated);
 
-        foreach (KeyValuePair<TrackableId, ARTrackedImage> lostObj in eventArgs.removed)
-        {
-            UpdateImage(lostObj.Value);
-        }
+        foreach (var removed in args.removed)
+            UpdateImage(removed.Value);
     }
 
     void UpdateImage(ARTrackedImage trackedImage)
     {
-        if(trackedImage != null)
+        if (trackedImage == null || trackedImage.referenceImage == null) return;
+
+        string name = trackedImage.referenceImage.name;
+
+        if (!spawnedPrefabs.TryGetValue(name, out GameObject obj))
+            return;
+
+        // Lost tracking
+        if (trackedImage.trackingState == TrackingState.None ||
+            trackedImage.trackingState == TrackingState.Limited)
         {
-            if (trackedImage.trackingState == TrackingState.Limited || trackedImage.trackingState == TrackingState.None)
+            if (obj.activeSelf)
             {
-                //Disable the associated content
-                spawnedPrefabs[trackedImage.referenceImage.name].SetActive(false);
+                obj.SetActive(false);
+
+                if (CurrentActiveObject == obj)
+                {
+                    CurrentActiveObject = null;
+                    OnPlantDeactivated?.Invoke(obj);
+                }
             }
-            else if (trackedImage.trackingState == TrackingState.Tracking)
+
+            return;
+        }
+
+        // Good tracking
+        if (trackedImage.trackingState == TrackingState.Tracking)
+        {
+            obj.transform.position = trackedImage.transform.position;
+            obj.transform.rotation = trackedImage.transform.rotation;
+
+            if (!obj.activeSelf)
+                obj.SetActive(true);
+
+            if (CurrentActiveObject != obj)
             {
-                //Enable the associated content
-                spawnedPrefabs[trackedImage.referenceImage.name].transform.position = trackedImage.transform.position;
-                spawnedPrefabs[trackedImage.referenceImage.name].transform.rotation = trackedImage.transform.rotation;
-                spawnedPrefabs[trackedImage.referenceImage.name].SetActive(true);
+                CurrentActiveObject = obj;
+                OnPlantActivated?.Invoke(obj);
             }
         }
     }
 }
+
