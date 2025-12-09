@@ -1,198 +1,76 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using Firebase;
 using Firebase.Auth;
-using Firebase.Extensions;
+using TMPro;
+using System.Threading.Tasks;
 
-public class AuthManager : MonoBehaviour
+public class FirebaseAuthManager : MonoBehaviour
 {
-    [Header("UI References")]
-    public TMP_InputField emailField;
-    public TMP_InputField passwordField;
-    public TextMeshProUGUI messageText;
-
-    // Optional – panels to switch after login
-    public GameObject loginPanel;
-    public GameObject mainGamePanel;
+    [Header("UI")]
+    public TMP_InputField emailInput;
+    public TMP_InputField passwordInput;
+    public TMP_Text statusText;
 
     private FirebaseAuth auth;
-    private FirebaseUser currentUser;
-    private bool firebaseReady = false;
 
-    void Awake()
+    async void Start()
     {
-        // Make sure Firebase is ready before using it
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
-        {
-            var status = task.Result;
-            if (status == DependencyStatus.Available)
-            {
-                auth = FirebaseAuth.DefaultInstance;
-                firebaseReady = true;
-                ShowMessage("Firebase ready. You can login or register.");
-            }
-            else
-            {
-                ShowMessage("Firebase init failed: " + status.ToString());
-            }
-        });
+        await InitializeFirebase();
     }
 
-    // Called by Login button
-    public void OnLoginButton()
+    private async Task InitializeFirebase()
     {
-        if (!firebaseReady)
+        var result = await FirebaseApp.CheckAndFixDependenciesAsync();
+        if (result == DependencyStatus.Available)
         {
-            ShowMessage("Please wait, Firebase is still initialising...");
-            return;
+            auth = FirebaseAuth.DefaultInstance;
+            Debug.Log("Firebase Auth Ready!");
         }
-
-        string email = emailField.text.Trim();
-        string password = passwordField.text;
-
-        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+        else
         {
-            ShowMessage("Please enter both email and password.");
-            return;
-        }
-
-        ShowMessage("Logging in...");
-
-        auth.SignInWithEmailAndPasswordAsync(email, password)
-            .ContinueWithOnMainThread(task =>
-            {
-                if (task.IsCanceled || task.IsFaulted)
-                {
-                    HandleAuthError(task.Exception);
-                    return;
-                }
-
-                currentUser = task.Result.User;
-                ShowMessage("Logged in as " + currentUser.Email);
-                OnLoginSuccess();
-            });
-    }
-
-    // Called by Register button
-    public void OnRegisterButton()
-    {
-        if (!firebaseReady)
-        {
-            ShowMessage("Please wait, Firebase is still initialising...");
-            return;
-        }
-
-        string email = emailField.text.Trim();
-        string password = passwordField.text;
-
-        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-        {
-            ShowMessage("Please enter both email and password.");
-            return;
-        }
-
-        if (password.Length < 6)
-        {
-            ShowMessage("Password must be at least 6 characters.");
-            return;
-        }
-
-        ShowMessage("Creating account...");
-
-        auth.CreateUserWithEmailAndPasswordAsync(email, password)
-            .ContinueWithOnMainThread(task =>
-            {
-                if (task.IsCanceled || task.IsFaulted)
-                {
-                    HandleAuthError(task.Exception);
-                    return;
-                }
-
-                currentUser = task.Result.User;
-                ShowMessage("Account created! Logged in as " + currentUser.Email);
-                OnLoginSuccess();
-            });
-    }
-
-    private void OnLoginSuccess()
-    {
-        // This is where you switch to your AR succulent scene,
-        // or hide login panel & show main UI.
-
-        if (loginPanel != null) loginPanel.SetActive(false);
-        if (mainGamePanel != null) mainGamePanel.SetActive(true);
-
-        // Example if you want to load a scene instead:
-        // SceneManager.LoadScene("SucculentScene");
-    }
-
-    public void OnLogoutButton()
-    {
-        if (auth != null)
-        {
-            auth.SignOut();
-            currentUser = null;
-            ShowMessage("You have been logged out.");
-
-            if (loginPanel != null) loginPanel.SetActive(true);
-            if (mainGamePanel != null) mainGamePanel.SetActive(false);
+            Debug.LogError("Firebase not ready: " + result);
         }
     }
 
-    private void HandleAuthError(AggregateException ex)
+    // ================= REGISTER =================
+    public async void RegisterUser()
     {
-        string niceMessage = "Authentication failed.";
+        string email = emailInput.text.Trim();
+        string password = passwordInput.text.Trim();
 
-        if (ex != null)
+        try
         {
-            foreach (var e in ex.InnerExceptions)
-            {
-                FirebaseException fe = e as FirebaseException;
-                if (fe != null)
-                {
-                    var errorCode = (AuthError)fe.ErrorCode;
-                    switch (errorCode)
-                    {
-                        case AuthError.InvalidEmail:
-                            niceMessage = "Invalid email format.";
-                            break;
-                        case AuthError.WrongPassword:
-                            niceMessage = "Incorrect password.";
-                            break;
-                        case AuthError.UserNotFound:
-                            niceMessage = "No account found with this email.";
-                            break;
-                        case AuthError.EmailAlreadyInUse:
-                            niceMessage = "Email is already in use.";
-                            break;
-                        case AuthError.WeakPassword:
-                            niceMessage = "Password is too weak.";
-                            break;
-                        default:
-                            niceMessage = "Auth error: " + errorCode.ToString();
-                            break;
-                    }
-                }
-            }
+            AuthResult authResult = await auth.CreateUserWithEmailAndPasswordAsync(email, password);
+            FirebaseUser user = authResult.User;
+
+            Debug.Log("Registered! UID = " + user.UserId);
+            statusText.text = "Registered as: " + user.Email;
         }
-
-        ShowMessage(niceMessage);
-    }
-
-    private void ShowMessage(string msg)
-    {
-        Debug.Log("[AuthManager] " + msg);
-        if (messageText != null)
+        catch (System.Exception e)
         {
-            messageText.text = msg;
+            Debug.LogError("Register Error: " + e.Message);
+            statusText.text = "Error: " + e.Message;
         }
     }
 
-    public FirebaseUser GetCurrentUser()
+    // ================= LOGIN =================
+    public async void LoginUser()
     {
-        return currentUser;
+        string email = emailInput.text.Trim();
+        string password = passwordInput.text.Trim();
+
+        try
+        {
+            AuthResult authResult = await auth.SignInWithEmailAndPasswordAsync(email, password);
+            FirebaseUser user = authResult.User;
+
+            Debug.Log("Logged in! UID = " + user.UserId);
+            statusText.text = "Logged in as: " + user.Email;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("Login Error: " + e.Message);
+            statusText.text = "Error: " + e.Message;
+        }
     }
 }
