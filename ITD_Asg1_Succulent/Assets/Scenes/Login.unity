@@ -2291,8 +2291,8 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
-  m_InputType: 0
+  m_ContentType: 7
+  m_InputType: 2
   m_AsteriskChar: 42
   m_KeyboardType: 0
   m_LineType: 0
@@ -5929,14 +5929,14 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
+  m_ContentType: 6
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 7
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 7
   m_RegexValue: 
   m_GlobalPointSize: 14
   m_CharacterLimit: 0
@@ -6381,75 +6381,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1137694258}
   m_CullTransparentMesh: 1
---- !u!1001 &1151883279
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 6172386750645461273, guid: b209ac1021cd4f54399cafc4f47dedeb, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 6172386750645461273, guid: b209ac1021cd4f54399cafc4f47dedeb, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 6172386750645461273, guid: b209ac1021cd4f54399cafc4f47dedeb, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 6172386750645461273, guid: b209ac1021cd4f54399cafc4f47dedeb, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 6172386750645461273, guid: b209ac1021cd4f54399cafc4f47dedeb, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.501
-      objectReference: {fileID: 0}
-    - target: {fileID: 6172386750645461273, guid: b209ac1021cd4f54399cafc4f47dedeb, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.761
-      objectReference: {fileID: 0}
-    - target: {fileID: 6172386750645461273, guid: b209ac1021cd4f54399cafc4f47dedeb, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6172386750645461273, guid: b209ac1021cd4f54399cafc4f47dedeb, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6172386750645461273, guid: b209ac1021cd4f54399cafc4f47dedeb, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6172386750645461273, guid: b209ac1021cd4f54399cafc4f47dedeb, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6172386750645461273, guid: b209ac1021cd4f54399cafc4f47dedeb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6172386750645461273, guid: b209ac1021cd4f54399cafc4f47dedeb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6172386750645461273, guid: b209ac1021cd4f54399cafc4f47dedeb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6837424797647682467, guid: b209ac1021cd4f54399cafc4f47dedeb, type: 3}
-      propertyPath: m_Name
-      value: cactus
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: b209ac1021cd4f54399cafc4f47dedeb, type: 3}
 --- !u!1 &1161925238
 GameObject:
   m_ObjectHideFlags: 0
@@ -6582,7 +6513,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Password\u200B"
+  m_text: "********\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7047,15 +6978,15 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11500000, guid: 2a3fd3243edd41f48b4142c23f953cb3, type: 3}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+        m_TargetAssemblyTypeName: UnityEditor.MonoScript, UnityEditor.CoreModule
+        m_MethodName: set_name
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: OnLoginButton()
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1295735156
@@ -8507,19 +8438,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1681214914}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11500000, guid: 2a3fd3243edd41f48b4142c23f953cb3, type: 3}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1681214914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9326,7 +9245,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1786032358}
-  - component: {fileID: 1786032357}
+  - component: {fileID: 1786032359}
   m_Layer: 0
   m_Name: FirebaseManager
   m_TagString: Untagged
@@ -9334,21 +9253,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1786032357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1786032356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a3fd3243edd41f48b4142c23f953cb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  emailField: {fileID: 1090326032}
-  passwordField: {fileID: 396492185}
-  messageText: {fileID: 0}
 --- !u!4 &1786032358
 Transform:
   m_ObjectHideFlags: 0
@@ -9364,6 +9268,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1786032359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1786032356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a3fd3243edd41f48b4142c23f953cb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emailInput: {fileID: 1090326032}
+  passwordInput: {fileID: 396492185}
+  statusText: {fileID: 0}
+  loginButton: {fileID: 1681214913}
+  registerButton: {fileID: 1295735155}
 --- !u!1 &1834316857
 GameObject:
   m_ObjectHideFlags: 0
@@ -10977,7 +10898,6 @@ SceneRoots:
   - {fileID: 941957746}
   - {fileID: 67097911}
   - {fileID: 1747936799}
-  - {fileID: 1151883279}
   - {fileID: 795726045}
   - {fileID: 718090267}
   - {fileID: 964099877}
