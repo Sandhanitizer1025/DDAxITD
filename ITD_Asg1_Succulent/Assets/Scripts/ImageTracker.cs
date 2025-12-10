@@ -8,11 +8,8 @@ public class ImageTracker : MonoBehaviour
 {
     public GameObject CurrentActiveObject;
 
-    [SerializeField]
-    private ARTrackedImageManager trackedImageManager;
-
-    [SerializeField]
-    private GameObject[] placeablePrefabs;
+    [SerializeField] private ARTrackedImageManager trackedImageManager;
+    [SerializeField] private GameObject[] placeablePrefabs;
 
     private Dictionary<string, GameObject> spawnedPrefabs = new Dictionary<string, GameObject>();
 
@@ -22,7 +19,7 @@ public class ImageTracker : MonoBehaviour
     void OnEnable()
     {
         if (trackedImageManager != null)
-            trackedImageManager.trackablesChanged.AddListener(OnImageChanged);   // NEW API
+            trackedImageManager.trackablesChanged.AddListener(OnImageChanged);
     }
 
     void OnDisable()
@@ -36,7 +33,7 @@ public class ImageTracker : MonoBehaviour
         SetupPrefabs();
     }
 
-    void SetupPrefabs()
+    private void SetupPrefabs()
     {
         spawnedPrefabs.Clear();
 
@@ -45,11 +42,12 @@ public class ImageTracker : MonoBehaviour
             GameObject newObj = Instantiate(prefab, Vector3.zero, Quaternion.identity);
             newObj.name = prefab.name;
             newObj.SetActive(false);
+
             spawnedPrefabs.Add(prefab.name, newObj);
         }
     }
 
-    void OnImageChanged(ARTrackablesChangedEventArgs<ARTrackedImage> args)
+    private void OnImageChanged(ARTrackablesChangedEventArgs<ARTrackedImage> args)
     {
         foreach (var added in args.added)
             UpdateImage(added);
@@ -61,18 +59,19 @@ public class ImageTracker : MonoBehaviour
             UpdateImage(removed.Value);
     }
 
-    void UpdateImage(ARTrackedImage trackedImage)
+    private void UpdateImage(ARTrackedImage trackedImage)
     {
-        if (trackedImage == null || trackedImage.referenceImage == null) return;
-
-        string name = trackedImage.referenceImage.name;
-
-        if (!spawnedPrefabs.TryGetValue(name, out GameObject obj))
+        if (trackedImage == null || trackedImage.referenceImage == null)
             return;
 
-        // Lost tracking
-        if (trackedImage.trackingState == TrackingState.None ||
-            trackedImage.trackingState == TrackingState.Limited)
+        string key = trackedImage.referenceImage.name;
+
+        if (!spawnedPrefabs.TryGetValue(key, out GameObject obj))
+            return;
+
+        // tracking lost → hide plant
+        if (trackedImage.trackingState == TrackingState.Limited ||
+            trackedImage.trackingState == TrackingState.None)
         {
             if (obj.activeSelf)
             {
@@ -84,15 +83,15 @@ public class ImageTracker : MonoBehaviour
                     OnPlantDeactivated?.Invoke(obj);
                 }
             }
-
             return;
         }
 
-        // Good tracking
+        // tracking good → show/update
         if (trackedImage.trackingState == TrackingState.Tracking)
         {
-            obj.transform.position = trackedImage.transform.position;
-            obj.transform.rotation = trackedImage.transform.rotation;
+            obj.transform.SetPositionAndRotation(
+                trackedImage.transform.position,
+                trackedImage.transform.rotation);
 
             if (!obj.activeSelf)
                 obj.SetActive(true);
@@ -105,4 +104,5 @@ public class ImageTracker : MonoBehaviour
         }
     }
 }
+
 
