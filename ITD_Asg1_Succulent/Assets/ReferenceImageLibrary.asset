@@ -21,9 +21,29 @@ MonoBehaviour:
       m_GuidLow: 4819135360840051360
       m_GuidHigh: 9941533377149887385
     m_SerializedTextureGuid:
-      m_GuidLow: 16502382058313841356
-      m_GuidHigh: 13024171012227029035
+      m_GuidLow: 1685526544420377865
+      m_GuidHigh: 11072206551447527547
+    m_Size: {x: 0.1, y: 0.0987211}
+    m_SpecifySize: 1
+    m_Name: Echeveria
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5432123664235549185
+      m_GuidHigh: 1986513045036585095
+    m_SerializedTextureGuid:
+      m_GuidLow: 13971556536202363767
+      m_GuidHigh: 1608467155769802456
     m_Size: {x: 0.1, y: 0.1}
     m_SpecifySize: 1
-    m_Name: succulent
+    m_Name: AloeVera
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 4760790136910921842
+      m_GuidHigh: 12548933581886728369
+    m_SerializedTextureGuid:
+      m_GuidLow: 5779356184753089803
+      m_GuidHigh: 560362419395758330
+    m_Size: {x: 0.1, y: 0.147929}
+    m_SpecifySize: 1
+    m_Name: Cactus
     m_Texture: {fileID: 0}
