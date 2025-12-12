@@ -27,3 +27,13 @@ MonoBehaviour:
     m_SpecifySize: 1
     m_Name: succulent
     m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5012156579627445773
+      m_GuidHigh: 2367558686646288570
+    m_SerializedTextureGuid:
+      m_GuidLow: 3023293450147671781
+      m_GuidHigh: 11734318870577783402
+    m_Size: {x: 0.1, y: 0.1}
+    m_SpecifySize: 1
+    m_Name: AloeVera
+    m_Texture: {fileID: 0}
