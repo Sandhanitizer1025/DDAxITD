@@ -16,7 +16,7 @@ public class FirebaseManager : MonoBehaviour
     public UnityEngine.UI.Button registerButton;
 
     [Header("Scene")]
-    public string sceneToLoad = "MainGarden";
+    public string sceneToLoad = "StartMenu"; 
 
     private FirebaseAuth auth;
     private bool isFirebaseReady = false;
