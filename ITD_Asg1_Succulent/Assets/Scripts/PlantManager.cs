@@ -1,18 +1,17 @@
-// PlantManager.cs
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlantManager : MonoBehaviour
 {
     public ImageTracker imageTracker;
-    public GameObject infoPanel; // optional global fallback panel
+    public GameObject infoPanel; // optional global override panel
 
     void Awake()
     {
         if (imageTracker != null)
         {
-            imageTracker.OnPlantActivated += SetupButtons;
-            imageTracker.OnPlantDeactivated += OnPlantDeactivated;
+            imageTracker.OnPlantActivated += SetupPlantUI;
+            imageTracker.OnPlantDeactivated += HideUI;
         }
     }
 
@@ -20,121 +19,113 @@ public class PlantManager : MonoBehaviour
     {
         if (imageTracker != null)
         {
-            imageTracker.OnPlantActivated -= SetupButtons;
-            imageTracker.OnPlantDeactivated -= OnPlantDeactivated;
+            imageTracker.OnPlantActivated -= SetupPlantUI;
+            imageTracker.OnPlantDeactivated -= HideUI;
         }
     }
 
-    private void SetupButtons(GameObject plant)
+    // Automatically called when the plant becomes visible
+    private void SetupPlantUI(GameObject plant)
     {
         if (plant == null) return;
 
         Transform canvas = plant.transform.Find("Canvas");
         if (canvas == null) return;
 
-        // Water
+        // auto-bind Water button
         Button water = canvas.Find("Water")?.GetComponent<Button>();
-        if (water != null)
+        if (water)
         {
             water.onClick.RemoveAllListeners();
             water.onClick.AddListener(() => WaterPlant(plant));
         }
 
-        // Fertilize
+        // auto-bind Fertilize button
         Button fertilize = canvas.Find("Fertilize")?.GetComponent<Button>();
-        if (fertilize != null)
+        if (fertilize)
         {
             fertilize.onClick.RemoveAllListeners();
             fertilize.onClick.AddListener(() => FertilizePlant(plant));
         }
 
-        // Info
+        // auto-bind Info button
         Button info = canvas.Find("Info")?.GetComponent<Button>();
-        if (info != null)
+        if (info)
         {
             info.onClick.RemoveAllListeners();
             info.onClick.AddListener(() => ShowInfo(plant));
         }
 
-        // Ensure prefab info panel starts hidden
-        Transform infoPanelLocal = canvas.Find("InfoPanel");
-        if (infoPanelLocal != null)
-            infoPanelLocal.gameObject.SetActive(false);
+        // ensure info panel disabled at start
+        Transform p = canvas.Find("InfoPanel");
+        if (p) p.gameObject.SetActive(false);
     }
 
-    private void OnPlantDeactivated(GameObject plant)
+    private void HideUI(GameObject plant)
     {
         if (plant == null) return;
 
-        Transform panel = plant.transform.Find("Canvas/InfoPanel");
-        if (panel != null)
-            panel.gameObject.SetActive(false);
+        Transform localPanel = plant.transform.Find("Canvas/InfoPanel");
+        if (localPanel)
+            localPanel.gameObject.SetActive(false);
 
-        if (infoPanel != null)
+        if (infoPanel)
             infoPanel.SetActive(false);
     }
 
+    // growth logic
     private void WaterPlant(GameObject plant)
     {
-        if (plant == null) return;
+        var growth = plant.GetComponent<PlantGrowth>();
+        if (!growth) return;
 
-        PlantGrowth growth = plant.GetComponent<PlantGrowth>();
-        if (growth != null)
-        {
-            growth.Grow();
-            Debug.Log($"Watered {plant.name} -> level {growth.growth}");
-        }
+        growth.Grow();
+        Debug.Log($"Watered {plant.name} → growth {growth.growth}");
     }
 
     private void FertilizePlant(GameObject plant)
     {
-        if (plant == null) return;
+        var growth = plant.GetComponent<PlantGrowth>();
+        if (!growth) return;
 
-        PlantGrowth growth = plant.GetComponent<PlantGrowth>();
-        if (growth != null)
-        {
-            growth.Grow();
-            growth.Grow();
-            Debug.Log($"Fertilized {plant.name} -> level {growth.growth}");
-        }
+        growth.Grow();
+        growth.Grow();
+        Debug.Log($"Fertilized {plant.name} → growth {growth.growth}");
     }
 
     private void ShowInfo(GameObject plant)
     {
-        if (plant == null) return;
-
-        PlantGrowth growth = plant.GetComponent<PlantGrowth>();
-        if (growth != null && growth.IsMature())
+        var growth = plant.GetComponent<PlantGrowth>();
+        if (growth == null || !growth.IsMature())
         {
-            Transform panel = plant.transform.Find("Canvas/InfoPanel");
-            if (panel != null)
-            {
-                panel.gameObject.SetActive(true);
-                return;
-            }
+            Debug.Log("Plant is not mature yet.");
+            return;
+        }
 
-            if (infoPanel != null)
-                infoPanel.SetActive(true);
-        }
-        else
+        Transform localPanel = plant.transform.Find("Canvas/InfoPanel");
+        if (localPanel)
         {
-            Debug.Log("Plant not mature yet or missing PlantGrowth.");
+            localPanel.gameObject.SetActive(true);
+            return;
         }
+
+        if (infoPanel)
+            infoPanel.SetActive(true);
     }
 
-    // Public helper if you need to hide from other systems
     public void HideInfo(GameObject plant)
     {
         if (plant == null) return;
 
         Transform panel = plant.transform.Find("Canvas/InfoPanel");
-        if (panel != null)
+        if (panel)
             panel.gameObject.SetActive(false);
 
-        if (infoPanel != null)
+        if (infoPanel)
             infoPanel.SetActive(false);
     }
 }
+
 
 
 

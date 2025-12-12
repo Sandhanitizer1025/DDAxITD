@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Login.unity
     guid: a3f67cf2005d0b24b9eacc29f448a6d9
   - enabled: 1
+    path: Assets/Scenes/StartMenu.unity
+    guid: ee70b5bae88f42142b31d89fabc5cf7f
+  - enabled: 1
     path: Assets/Scenes/MainGarden.unity
     guid: 079c3cc850267064487ecec4d1389f83
   m_configObjects:
